@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "946845714904",
+    "project_id": "messaging-726f2",
+    "storage_bucket": "messaging-726f2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946845714904:android:3fea851d9949b6db8d4aad",
+        "android_client_info": {
+          "package_name": "com.example.messagingfcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946845714904-ii66av4tmbpbnqh1k2lb2gou99u581d6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdt8faF0P1TtunjWtJk4utIp61elYjqt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946845714904-ii66av4tmbpbnqh1k2lb2gou99u581d6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "946845714904-ac7tuj5v1e295nkjjf8hb5o5gjojqcao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.listExcel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
