@@ -27,9 +27,9 @@ If you are using Flutter Android Embedding V2 (Flutter Version >= 1.12) then no 
 For the Flutter Android Embedding V1, the background service must be provided a callback to register plugins with the background isolate. This is done by giving the `FlutterFirebaseMessagingBackgroundService` a callback to call your application's `onCreate` method.
 
 In particular, its `Application` class:
-'''
 
-*// ...*
+
+```
 
 *import* io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService;
 
@@ -58,7 +58,7 @@ In particular, its `Application` class:
   *// ...*
 
 }
-'''
+```
 Which is usually reflected in the application's `AndroidManifest.xml`. E.g.:
 
     <application
@@ -80,22 +80,24 @@ iOS & macOS require additional configuration before you can start receiving mess
 ### 5\. Rebuild your app
 
 Once complete, rebuild your Flutter application:
-
+```
 flutter run
+```
 
 Cloud Messaging
 ===============
 
 To start using the Cloud Messaging package within your project, import it at the top of your project files:
-
+```
 *import* 'package:firebase_messaging/firebase_messaging.dart';
+```
 
 Before using Firebase Cloud Messaging, you must first have ensured you have [initialized FlutterFire](https://firebase.flutter.dev/docs/overview#initializing-flutterfire).
 
 To create a new Messaging instance, call the [`instance`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/instance.html) getter on [`FirebaseMessaging`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging-class.html):
-
+```
 FirebaseMessaging messaging = FirebaseMessaging.instance;
-
+```
 Messaging currently only supports usage with the default Firebase App instance.
 
 Receiving messages
@@ -170,7 +172,7 @@ On iOS, macOS & web, before FCM payloads can be received on your device, you mus
 The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/requestPermission.html)method. This API accepts a number of named arguments which define the type of permissions you'd like to request, such as whether messaging containing notification payloads can trigger a sound or read out messages via Siri. By default, the method requests sensible default permissions. The reference API provides full documentation on what each permission is for.
 
 To get started, call the method from your application (on iOS a native modal will be displayed, on web the browser's native API flow will be triggered):
-
+```
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 NotificationSettings settings = *await* messaging.requestPermission(
@@ -192,6 +194,7 @@ NotificationSettings settings = *await* messaging.requestPermission(
 );
 
 print('User granted permission: ${settings.authorizationStatus}');
+```
 
 The `NotificationSettings` class returned from the request details information regarding the user's decision.
 
@@ -218,7 +221,7 @@ Once permission has been granted & the different types of device state have been
 On the web, before a message can be sent to the browser you must do two things.
 
 1.  Create an initial handshake with Firebase by passing in the public `vapidKey` to `messaging.getToken(vapidKey: 'KEY')` method. Head over to the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging) and create a new "Web Push Certificate". A key will be provided, which you can provide to the method:
-
+```
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 *// use the returned token to send messages to users from your custom server*
@@ -228,9 +231,10 @@ String token = *await* messaging.getToken(
   vapidKey: "BGpdLRs......",
 
 );
+```
 
 1.  Create a `firebase-messaging-sw.js` file inside the `web/` directory in the root of your project. In your `web/index.html` file, please ensure this file is referenced and registered as a `serviceWorker` as demonstrated below:
-
+```
   *<!-- ...other html setup. -->*
 
   <script>
@@ -252,7 +256,7 @@ String token = *await* messaging.getToken(
 </body>
 
 ### Message types
-
+```
 A message payload can be viewed as one of three types:
 
 1.  Notification only message: The payload contains a `notification` property, which will be used to [present a visible notification to the user](https://firebase.flutter.dev/docs/messaging/notifications).
@@ -337,7 +341,7 @@ Since the sending of FCM payloads is custom to your own setup, it is best to rea
 ### Foreground messages
 
 To listen to messages whilst your application is in the foreground, listen to the [`onMessage`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/onMessage.html) stream.
-
+```
 FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 
   print('Got a message whilst in the foreground!');
@@ -351,6 +355,7 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
   }
 
 });
+```
 
 The stream contains a `RemoteMessage`, detailing various information about the payload, such as where it was from, the unique ID, sent time, whether it contained a notification & more. Since the message was retrieved whilst your application is in the foreground, you can directly access your Flutter application's state & context.
 
@@ -377,7 +382,7 @@ There are a few things to keep in mind about your background message handler:
 
 1.  It must not be an anonymous function.
 2.  It must be a top-level function (e.g. not a class method which requires initialization).
-
+```
 Future<*void*> _firebaseMessagingBackgroundHandler(RemoteMessage message) *async* {
 
   *// If you're going to use other Firebase services in the background, such as Firestore,*
@@ -397,7 +402,7 @@ Future<*void*> _firebaseMessagingBackgroundHandler(RemoteMessage message) *as
   runApp(MyApp());
 
 }
-
+```
 Since the handler runs in its own isolate outside your applications context, it is not possible to update application state or execute any UI impacting logic. You can, however, perform logic such as HTTP requests, perform IO operations (e.g. updating local storage), communicate with other plugins etc.
 
 It is also recommended to complete your logic as soon as possible. Running long, intensive tasks impacts device performance and may cause the OS to terminate the process. If tasks run for longer than 30 seconds, the device may automatically kill the process.
@@ -442,15 +447,15 @@ To learn more about how to send messages to devices subscribed to topics, view t
 To subscribe a device, call the [`subscribeToTopic`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/subscribeToTopic.html) method with the topic name:
 
 *// subscribe to topic on each app start-up*
-
+```
 *await* FirebaseMessaging.instance.subscribeToTopic('weather');
-
+```
 ### Unsubscribing from topics
 
 To unsubscribe from a topic, call the [`unsubscribeFromTopic`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/unsubscribeFromTopic.html) method with the topic name:
-
+```
 *await* FirebaseMessaging.instance.unsubscribeFromTopic('weather');
-
+```
 FCM via APNs Integration
 ========================
 
@@ -635,7 +640,7 @@ Ensure that your new extension has access to Firebase/Messaging pod by adding it
 
 -   From the Navigator open the Podfile: Pods > Podfile
 -   Scroll down to the bottom of the file and add:
-
+```
 target 'ImageNotification' *do*
 
   use_frameworks!
@@ -643,7 +648,7 @@ target 'ImageNotification' *do*
   pod 'Firebase/Messaging'
 
 *end*
-
+```
 -   Install or update your pods using `pod install` from the `ios` and/or `macos` directory.
 
 ![Xcode - Add target to the Podfile](blob:https://euangoddard.github.io/79eeab31-472a-4585-b76e-f48d94ae0f8f)
@@ -657,7 +662,7 @@ At this point everything should still be running normally. This is the final ste
 -   From the navigator select your `ImageNotification` extension
 -   Open the `NotificationService.m` file
 -   At the top of the file import `FirebaseMessaging.h` right after the `NotificationService.h` as shown below:
-
+```
 #import "NotificationService.h"
 
 + #import "FirebaseMessaging.h"
@@ -671,7 +676,7 @@ At this point everything should still be running normally. This is the final ste
 - self.contentHandler(self.bestAttemptContent);
 
 + [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
-
+```
 ![Xcode - Use the extension helper](blob:https://euangoddard.github.io/5bdf1e35-c235-4a37-a56d-97eda15f0719)
 
 Xcode - Use the extension helper
@@ -695,7 +700,7 @@ Requesting permissions[#](https://firebase.flutter.dev/docs/messaging/overview/#
 --------------------------------------------------------------------------------------------------------------------------------
 
 As explained in the [Usage documentation](https://firebase.flutter.dev/docs/messaging/usage), permission must be requested from your users in order to display remote notifications from FCM, via the [`requestPermission`](https://pub.dev/documentation/firebase_messaging/latest/firebase_messaging/FirebaseMessaging/requestPermission.html) API:
-
+```
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
 NotificationSettings settings = *await* messaging.requestPermission(
@@ -729,7 +734,7 @@ NotificationSettings settings = *await* messaging.requestPermission(
   print('User declined or has not accepted permission');
 
 }
-
+```
 On Apple based platforms, once a permission request has been handled by the user (authorized or denied), it is not possible to re-request permission. The user must instead update permission via the device Settings UI:
 
 -   If the user denied permission altogether, they must enable app permission fully.
@@ -849,12 +854,13 @@ Provisional authorization
 Devices on iOS 12+ can use provisional authorization. This type of permission system allows for notification permission to be instantly granted without displaying a dialog to your user. The permission allows notifications to be displayed quietly (only visible within the device notification center).
 
 To enable provision permission, set the `provisional` argument to `true` when requesting permission:
-
+```
 NotificationSettings settings = *await* messaging.requestPermission(
 
   provisional: true,
 
 );
+```
 
 When a notification is displayed on the device, the user will be presented with several actions prompting to keep receiving notifications quietly, enable full notification permission or turn them off:
 
@@ -901,7 +907,7 @@ The Firebase Console automatically sends a message to your devices containing a 
 Using one of the [various Firebase Admin SDKs](https://firebase.google.com/docs/reference/admin), you can send customized data payloads to your devices from your own servers.
 
 For example, when using the [`firebase-admin`] package in a Node.js environment to send messages from a server, a `notification` property can be added to the message payload:
-
+```
 *const* admin = require("firebase-admin");
 
 *await* admin.messaging().sendMulticast({
@@ -919,13 +925,13 @@ For example, when using the [`firebase-admin`] package in a Node.js environmen
   },
 
 });
-
+```
 To learn more about how to integrate Cloud Messaging with your own setup, read the [Server Integration](https://firebase.flutter.dev/docs/messaging/server-integration)documentation.
 
 ### Via REST
 
 If you are unable to use a [Firebase Admin SDK](https://firebase.google.com/docs/reference/admin), Firebase also provides support for sending messages to devices via HTTP POST requests:
-
+```
 POST https://fcm.googleapis.com/v1/projects/myproject-b5ae1/messages:send HTTP/1.1
 
 Content-Type: application/json
@@ -951,6 +957,7 @@ Authorization: Bearer ya29.ElqKBGN2Ri_Uz...HnS_uNreA
    }
 
 }
+```
 
 To learn more about the REST API, view the [Firebase documentation](https://firebase.google.com/docs/cloud-messaging/send-message#rest), and select the "REST" tab under the code examples.
 
@@ -967,7 +974,7 @@ The `firebase-messaging` package provides two ways to handle this interaction:
 2.  `onMessageOpenedApp`: A `Stream` which posts a `RemoteMessage` when the application is opened from a background state.
 
 It is recommended that both scenarios are handled to ensure a smooth UX for your users. The code example below outlines how this can be achieved:
-
+```
 *class* Application *extends* StatefulWidget {
 
   @override
@@ -1045,6 +1052,7 @@ It is recommended that both scenarios are handled to ensure a smooth UX for your
   }
 
 }
+```
 
 How you handle interaction depends on your application setup, however the example above shows a basic example of using a StatefulWidget.
 
@@ -1062,7 +1070,7 @@ Android & iOS have different behaviors when handling notifications whilst applic
 #### **iOS Configuration**
 
 Enabling foreground notifications is generally a straightforward process. Call the `setForegroundNotificationPresentationOptions` method with named arguments:
-
+```
 *await* FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
 
   alert: true, *// Required to display a heads up notification*
@@ -1072,6 +1080,7 @@ Enabling foreground notifications is generally a straightforward process. Call t
   sound: true,
 
 );
+```
 
 Set all values back to `false` to revert to the default functionality.
 
@@ -1090,7 +1099,7 @@ This means that we need to first create a new channel with a maximum importance 
 
 1.  Add the `flutter_local_notifications` package to your local project.
 2.  Create a new `AndroidNotificationChannel` instance:
-
+```
 *const* AndroidNotificationChannel channel = AndroidNotificationChannel(
 
   'high_importance_channel', *// id*
@@ -1102,9 +1111,9 @@ This means that we need to first create a new channel with a maximum importance 
   importance: Importance.max,
 
 );
-
+```
 1.  Create the channel on the device (if a channel with an id already exists, it will be updated):
-
+```
 *final* FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
     FlutterLocalNotificationsPlugin();
@@ -1114,19 +1123,19 @@ This means that we need to first create a new channel with a maximum importance 
   .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
 
   ?.createNotificationChannel(channel);
-
+```
 Once created, we can now update FCM to use our own channel rather than the default FCM one. To do this, open the `android/app/src/main/AndroidManifest.xml` file for your FlutterProject project. Add the following `meta-data` schema within the `application` component:
-
+```
 <meta-data
 
   android:name="com.google.firebase.messaging.default_notification_channel_id"
 
   android:value="high_importance_channel" />
-
+```
 ##### **Application in foreground**
 
 If your own application is in the foreground, the Firebase Android SDK will block displaying any FCM notification no matter what Notification Channel has been set. We can however still handle an incoming notification message via the `onMessage` stream and create a custom local notification using [`flutter_local_notifications`](https://pub.dev/packages/flutter_local_notifications):
-
+```
 FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 
   RemoteNotification notification = message.notification;
@@ -1168,7 +1177,7 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
   }
 
 });
-
+```
 Server Integration
 ==================
 
@@ -1188,7 +1197,7 @@ If using iOS, ensure you have completed the [setup](https://firebase.flutter.de
 ### Saving tokens
 
 Once your application has started, you can call the `getToken` method on the Cloud Messaging module to get the unique device token (if using a different push notification provider, such as Amazon SNS, you will need to call `getAPNSToken` on iOS):
-
+```
 Future<*void*> saveTokenToDatabase(String token) *async* {
 
   *// Assume user is logged in for this example*
@@ -1256,7 +1265,7 @@ Future<*void*> saveTokenToDatabase(String token) *async* {
   }
 
 }
-
+```
 The above code snippet has a single purpose; storing the device FCM token on a remote database. When your application first initializes, the users FCM token is fetched and stored in a database (Cloud Firestore in this example). If the token is refreshed at any point whilst your application is open, the new token is also stored on the database.
 
 It is important to remember a user can have many tokens (from multiple devices, or token refreshes), therefore we use `FieldValue.arrayUnion` to store new tokens. When a message is sent via an admin SDK, invalid/expired tokens will throw an error allowing you to then remove them from the database.
@@ -1270,7 +1279,7 @@ The following example uses the Node.JS `firebase-admin` package to send messag
 Imagine our application being similar to Instagram. Users are able to upload pictures, and other users can "like" those pictures. Each time a post is liked, we want to send a message to the user that uploaded the picture.
 
 The code below simulates a function which is called with all the information required when a picture is liked:
-
+```
 *// Node.js e.g via a Firebase Cloud Function*
 
 *var* admin = require("firebase-admin");
@@ -1324,13 +1333,13 @@ The code below simulates a function which is called with all the information req
   );
 
 }
-
+```
 Data-only messages are sent as low priority on both Android and iOS and will not trigger the background handler by default. To enable this functionality, you must set the "priority" to `high` on Android and enable the `content-available` flag for iOS in the message payload.
 
 The data property can send an object of key-value pairs totaling 4 KB as string values (hence the `JSON.stringify`calls).
 
 Within the application, you can then handle these messages how you see fit:
-
+```
 FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 
   Map<String, String> data = message.data;
@@ -1344,7 +1353,7 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
   print('The user ${user.name} liked your picture "${picture.title}"!');
 
 });
-
+```
 Your application code can then handle messages as you see fit; updating local cache, displaying a notification or updating UI. The possibilities are endless!
 
 Send messages to topics
@@ -1353,7 +1362,7 @@ Send messages to topics
 When devices [subscribe to topics](https://firebase.flutter.dev/docs/messaging/usage#subscribing-to-topics), you can send messages without specifying/storing any device tokens.
 
 Using the `firebase-admin` Admin SDK as an example, we can send a message to devices subscribed to a topic:
-
+```
 *// Node.js e.g via a Firebase Cloud Function*
 
 *const* admin = require("firebase-admin");
@@ -1391,9 +1400,9 @@ admin
   });
 
 ### Conditional topics[#](https://firebase.flutter.dev/docs/messaging/overview/#conditional-topics "Direct link to heading")
-
+```
 To send a message to a combination of topics, specify a condition, which is a boolean expression that specifies the target topics. For example, the following condition will send messages to devices that are subscribed to `weather`and either `news` or `traffic`:
-
+```
 *const* admin = require("firebase-admin");
 
 *const* message = {
@@ -1425,3 +1434,4 @@ admin
     console.log("Error sending message:", error);
 
   });
+```
