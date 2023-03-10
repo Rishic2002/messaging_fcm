@@ -27,6 +27,7 @@ If you are using Flutter Android Embedding V2 (Flutter Version >= 1.12) then no 
 For the Flutter Android Embedding V1, the background service must be provided a callback to register plugins with the background isolate. This is done by giving the `FlutterFirebaseMessagingBackgroundService` a callback to call your application's `onCreate` method.
 
 In particular, its `Application` class:
+'''
 
 *// ...*
 
@@ -57,7 +58,7 @@ In particular, its `Application` class:
   *// ...*
 
 }
-
+'''
 Which is usually reflected in the application's `AndroidManifest.xml`. E.g.:
 
     <application
