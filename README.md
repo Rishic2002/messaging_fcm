@@ -10,7 +10,7 @@ Installation
 
 ### 1\. Make sure to initialize Firebase
 
-### [Follow this guide](https://firebase.flutter.dev/docs/overview) to install `firebase_core` and initialize Firebase if you haven't already.
+### (https://firebase.flutter.dev/docs/overview) to install `firebase_core` and initialize Firebase.
 
 ### 2\. Add dependency
 
@@ -119,22 +119,14 @@ To learn about how to send messages to devices from your own server setup, view 
 
 Depending on a device's state, incoming messages are handled differently. To understand these scenarios & how to integrate FCM into your own application, it is first important to establish the various states a device can be in:
 
-|
 
-**State**
-
- |
-
-**Description**
+-Foreground- When the application is open, in view & in use.
 
 
--Foreground-When the application is open, in view & in use.
+-Background- When the application is open, however in the background (minimised). This typically occurs when the user has pressed the "home" button on the device, has switched to another app via the app switcher or has the application open on a different tab (web).
 
 
--Background-When the application is open, however in the background (minimised). This typically occurs when the user has pressed the "home" button on the device, has switched to another app via the app switcher or has the application open on a different tab (web).
-
-
--Terminated-When the device is locked or the application is not running. The user can terminate an app by "swiping it away" via the app switcher UI on the device or closing a tab (web).
+-Terminated- When the device is locked or the application is not running. The user can terminate an app by "swiping it away" via the app switcher UI on the device or closing a tab (web).
 
 
 
