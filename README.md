@@ -127,35 +127,17 @@ Depending on a device's state, incoming messages are handled differently. To und
 
 **Description**
 
- |
-| --- | --- |
-|
 
-Foreground
+-Foreground-When the application is open, in view & in use.
 
- |
 
-When the application is open, in view & in use.
+-Background-When the application is open, however in the background (minimised). This typically occurs when the user has pressed the "home" button on the device, has switched to another app via the app switcher or has the application open on a different tab (web).
 
- |
-|
 
-Background
+-Terminated-When the device is locked or the application is not running. The user can terminate an app by "swiping it away" via the app switcher UI on the device or closing a tab (web).
 
- |
 
-When the application is open, however in the background (minimised). This typically occurs when the user has pressed the "home" button on the device, has switched to another app via the app switcher or has the application open on a different tab (web).
 
- |
-|
-
-Terminated
-
- |
-
-When the device is locked or the application is not running. The user can terminate an app by "swiping it away" via the app switcher UI on the device or closing a tab (web).
-
- |
 
 There are a few preconditions which must be met before the application can receive message payloads via FCM:
 
@@ -263,73 +245,8 @@ A message payload can be viewed as one of three types:
 2.  Data only message: Also known as a "silent message", this payload contains custom key/value pairs within the `data` property which can be used how you see fit. These messages are considered "low priority" (more on this later).
 3.  Notification & Data messages: Payloads with both `notification` and `data` properties.
 
-Based on your application's current state, incoming payloads require different implementations to handle them:
 
-|  |
 
-**Foreground**
-
- |
-
-**Background**
-
- |
-
-**Terminated**
-
- |
-| --- | --- | --- | --- |
-|
-
-Notification
-
- |
-
-`onMessage`
-
- |
-
-`onBackgroundMessage`
-
- |
-
-`onBackgroundMessage`
-
- |
-|
-
-Data
-
- |
-
-`onMessage`
-
- |
-
-`onBackgroundMessage` 
-
- |
-
-`onBackgroundMessage` 
-
- |
-|
-
-Notification & Data
-
- |
-
-`onMessage`
-
- |
-
-`onBackgroundMessage`
-
- |
-
-`onBackgroundMessage`
-
- |
 
 Data only messages are considered low priority by devices when your application is in the background or terminated, and will be ignored. You can however explicitly increase the priority by sending additional properties on the FCM payload:
 
